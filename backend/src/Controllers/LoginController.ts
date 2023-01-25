@@ -23,7 +23,7 @@ class LoginController {
             const response = await this.service.handleLoginService();
             return this.res.status(200).json(response);
         } catch(e) {
-            console.log(e);
+            this.next(e);
         }
     }
 }

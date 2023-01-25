@@ -3,6 +3,7 @@ dotenv.config();
 import express, { Express } from "express";
 import connectToDatabase from "./Models/connection";
 import LoginRouter from "./Routes/LoginRouter";
+import ErrorHandler from "./Middlewares/ErrorMidleware";
 
 
 class App {
@@ -15,6 +16,7 @@ class App {
     private config() {
         this.app.use(express.json());
         this.app.use("/login", new LoginRouter().router);
+        this.app.use(ErrorHandler.handle);
     }
 
     public start() {
