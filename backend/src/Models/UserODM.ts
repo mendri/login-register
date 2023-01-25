@@ -1,11 +1,25 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, models, Model } from "mongoose";
 import IUser from "../Interfaces/IUser";
 
-const userSchema = new Schema<IUser>({
-    email: { type: String, required: true },
-    password: { type: String, required: true }
-});
+class UserODM {
+    private schema: Schema;
+    private model: Model<IUser>;
 
-const UserODM = model<IUser>("User", userSchema);
+    constructor() {
+        this.schema = new Schema<IUser>({
+            email: { type: String, required: true },
+            password: { type: String, required: true }
+        });
+        this.model = models.User || model("User", this.schema);
+    }
+
+    public async readAllUsers(): Promise<IUser[]>{
+        return this.model.find();
+    }
+
+    public async readUserByEmail(email: string): Promise<IUser | null>{
+        return this.model.findOne({email});
+    }
+}
 
 export default UserODM;
