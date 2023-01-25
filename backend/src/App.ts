@@ -14,7 +14,7 @@ class App {
     
     private config() {
         this.app.use(express.json());
-        this.app.use("/login", LoginRouter);
+        this.app.use("/login", new LoginRouter().router);
     }
 
     public start() {

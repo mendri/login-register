@@ -2,28 +2,23 @@ import { NextFunction, Request, Response } from "express";
 import LoginService from "../Services/LoginService";
 
 class LoginController {
-    private req: Request;
-    private res: Response;
-    private next: NextFunction;
     private service: LoginService;
 
-    constructor(
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) {
-        this.req = req;
-        this.res = res;
-        this.next = next;
+    constructor() {
         this.service = new LoginService();
     }
 
-    public async login() {
+    public async login(
+        _req: Request,
+        res: Response,
+        next: NextFunction
+    ) {
         try {
             const response = await this.service.handleLoginService();
-            return this.res.status(200).json(response);
+            return res.status(200).json(response);
         } catch(e) {
             console.log(e);
+            next();
         }
     }
 }
