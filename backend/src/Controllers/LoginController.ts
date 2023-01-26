@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import LoginService from "../Services/LoginService";
+import UserValidation from "../Validations/UserValidation";
 
 class LoginController {
     private req: Request;
@@ -20,6 +21,8 @@ class LoginController {
 
     public async login() {
         try {
+            const { user } = this.req.body;
+            UserValidation.validate(user);
             const response = await this.service.handleLoginService();
             return this.res.status(200).json(response);
         } catch(e) {
