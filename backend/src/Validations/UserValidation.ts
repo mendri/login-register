@@ -1,6 +1,7 @@
 import { z } from "zod";
 import IError from "../Interfaces/IError";
 import IUser from "../Interfaces/IUser";
+import StatusCodes from "../Helpers/StatusCodes";
 
 class UserValidation {
     public static validate(user: IUser) {
@@ -13,7 +14,7 @@ class UserValidation {
 
         if (!data.success) {
             const error = new Error(data.error.issues[0].message) as IError;
-            error.status = 400;
+            error.status = StatusCodes.BAD_REQUEST_STATUS;
             throw error;
         }
     }

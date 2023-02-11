@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import StatusCodes from "../Helpers/StatusCodes";
 import IError from "../Interfaces/IError";
 
 class ErrorHandler {
@@ -8,7 +9,8 @@ class ErrorHandler {
         res: Response,
         next: NextFunction,
     ) {
-        res.status(error.status || 500).json({ message: error.message });
+        res.status(error.status || StatusCodes.INTERNAL_SERVER_ERROR_STATUS)
+            .json({ message: error.message });
         next();
     }
 }

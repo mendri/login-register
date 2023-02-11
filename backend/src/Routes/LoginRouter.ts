@@ -6,13 +6,12 @@ class LoginRouter {
 
     constructor() {
         this.router = Router();
-        this.setupRoutes();
+        this.setupRouter();
     }
 
-    private async setupRoutes() {
-        this.router.get("/", (req, res, next) => new LoginController(req, res, next).login());
+    private async setupRouter() {
+        this.router.post("/", (req, res, next) => new LoginController(req, res, next).login());
     }
 }
-
 
 export default LoginRouter;
