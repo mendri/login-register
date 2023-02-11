@@ -1,3 +1,6 @@
+import bcrypt from "bcryptjs";
+import StatusCodes from "../Helpers/StatusCodes";
+import IError from "../Interfaces/IError";
 import IUser from "../Interfaces/IUser";
 import UserODM from "../Models/UserODM";
 
@@ -7,10 +10,36 @@ class LoginService {
     constructor() {
         this.model = new UserODM();
     }
-
-    public async handleLoginService(): Promise<IUser[]> {
-        const user = await this.model.readAllUsers();
+    
+    public async handleLoginService(reqUser: IUser): Promise<IUser | null> {
+        const { email, password } = reqUser;
+            
+        const user = await this.verifyIfUserExistsByEmail(email);
+        await this.verifyEncryptedPass(password, user.password);
+            
         return user;
+    }
+
+    private async verifyIfUserExistsByEmail(email: string) {
+        const user = await this.model.readUserByEmail(email);
+
+        if (!user) {
+            const error = new Error("Não existe usuário com este email") as IError;
+            error.status = StatusCodes.NOT_FOUND;
+            throw error;
+        }
+
+        return user;
+    }
+
+    private async verifyEncryptedPass(pass: string, hashPass: string): Promise<void> {
+        const isValid = await bcrypt.compare(pass, hashPass);
+        
+        if (!isValid) {
+            const error = new Error("Senha incorreta") as IError;
+            error.status = StatusCodes.UNAUTHORIZED_STATUS;
+            throw error;
+        }
     }
 }
 

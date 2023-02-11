@@ -1,8 +1,17 @@
 import { Router } from "express";
 import LoginController from "../Controllers/LoginController";
 
-const router = Router();
+class LoginRouter {
+    public router: Router;
 
-router.get("/", (req, res, next) => new LoginController(req, res, next).login());
+    constructor() {
+        this.router = Router();
+        this.setupRouter();
+    }
 
-export default router;
+    private async setupRouter() {
+        this.router.post("/", (req, res, next) => new LoginController(req, res, next).login());
+    }
+}
+
+export default LoginRouter;
