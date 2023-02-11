@@ -24,8 +24,8 @@ class LoginController {
         try {
             const { user } = this.req.body;
             UserValidation.validate(user);
-            const response = await this.service.handleLoginService(user);
-            return this.res.status(StatusCodes.OK_STATUS).json(response);
+            const token = await this.service.handleLoginService(user);
+            return this.res.status(StatusCodes.OK_STATUS).json({ token });
         } catch(e) {
             this.next(e);
         }

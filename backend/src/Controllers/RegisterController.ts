@@ -24,8 +24,8 @@ class RegisterController {
         try {
             const { user } = this.req.body;
             UserValidation.validate(user);
-            await this.service.handleRegister(user);
-            return this.res.status(StatusCodes.OK_STATUS).json({ message: "Usuário Registrado" });
+            const token = await this.service.handleRegister(user);
+            return this.res.status(StatusCodes.OK_STATUS).json({ token });
         } catch(e) {
             this.next(e);
         }

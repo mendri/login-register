@@ -3,6 +3,7 @@ import IUser from "../Interfaces/IUser";
 import UserODM from "../Models/UserODM";
 import IError from "../Interfaces/IError";
 import StatusCodes from "../Helpers/StatusCodes";
+import generateToken from "../Helpers/JWT";
 
 class RegisterService {
     private model: UserODM;
@@ -11,11 +12,12 @@ class RegisterService {
         this.model = new UserODM();
     }
 
-    public async handleRegister(user: IUser) {
+    public async handleRegister(user: IUser): Promise<string> {
         const { email, password } = user;
         await this.verifyIfUserExistsByEmail(email);
         const hashPass = await this.encryptThePassword(password);
         await this.saveInDatabase(email, hashPass);
+        return generateToken(email);
     }
 
     private async verifyIfUserExistsByEmail(email: string) {

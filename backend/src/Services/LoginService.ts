@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import generateToken from "../Helpers/JWT";
 import StatusCodes from "../Helpers/StatusCodes";
 import IError from "../Interfaces/IError";
 import IUser from "../Interfaces/IUser";
@@ -11,13 +12,13 @@ class LoginService {
         this.model = new UserODM();
     }
     
-    public async handleLoginService(reqUser: IUser): Promise<IUser | null> {
+    public async handleLoginService(reqUser: IUser): Promise<string> {
         const { email, password } = reqUser;
             
         const user = await this.verifyIfUserExistsByEmail(email);
         await this.verifyEncryptedPass(password, user.password);
             
-        return user;
+        return generateToken(email);
     }
 
     private async verifyIfUserExistsByEmail(email: string) {
