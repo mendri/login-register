@@ -1,9 +1,7 @@
 "use strict";
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -17,10 +15,6 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
@@ -43,19 +37,37 @@ var __async = (__this, __arguments, generator) => {
   });
 };
 
-// src/Models/connection.ts
-var connection_exports = {};
-__export(connection_exports, {
-  default: () => connection_default
+// src/Models/UserODM.ts
+var UserODM_exports = {};
+__export(UserODM_exports, {
+  default: () => UserODM_default
 });
-module.exports = __toCommonJS(connection_exports);
-var import_mongoose = __toESM(require("mongoose"));
-function connectToDatabase(URI) {
-  return __async(this, null, function* () {
-    import_mongoose.default.set("strictQuery", true);
-    yield import_mongoose.default.connect(URI);
-  });
-}
-var connection_default = connectToDatabase;
+module.exports = __toCommonJS(UserODM_exports);
+var import_mongoose = require("mongoose");
+var UserODM = class {
+  constructor() {
+    this.schema = new import_mongoose.Schema({
+      email: { type: String, required: true },
+      password: { type: String, required: true }
+    });
+    this.model = import_mongoose.models.User || (0, import_mongoose.model)("User", this.schema);
+  }
+  createUser(email, hashPass) {
+    return __async(this, null, function* () {
+      yield this.model.create({ email, password: hashPass });
+    });
+  }
+  readAllUsers() {
+    return __async(this, null, function* () {
+      return this.model.find();
+    });
+  }
+  readUserByEmail(email) {
+    return __async(this, null, function* () {
+      return this.model.findOne({ email }, { "__v": false });
+    });
+  }
+};
+var UserODM_default = UserODM;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {});

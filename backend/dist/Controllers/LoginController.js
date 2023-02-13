@@ -5,6 +5,10 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
@@ -17,6 +21,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -38,25 +43,12 @@ var __async = (__this, __arguments, generator) => {
   });
 };
 
-// src/App.ts
-var dotenv2 = __toESM(require("dotenv"));
-var import_express3 = __toESM(require("express"));
-
-// src/Models/connection.ts
-var import_mongoose = __toESM(require("mongoose"));
-function connectToDatabase(URI) {
-  return __async(this, null, function* () {
-    import_mongoose.default.set("strictQuery", true);
-    yield import_mongoose.default.connect(URI);
-  });
-}
-var connection_default = connectToDatabase;
-
-// src/App.ts
-var import_cors = __toESM(require("cors"));
-
-// src/Routes/LoginRouter.ts
-var import_express = require("express");
+// src/Controllers/LoginController.ts
+var LoginController_exports = {};
+__export(LoginController_exports, {
+  default: () => LoginController_default
+});
+module.exports = __toCommonJS(LoginController_exports);
 
 // src/Helpers/StatusCodes.ts
 var StatusCodes = {
@@ -89,14 +81,14 @@ var generateToken = (payload) => {
 var JWT_default = generateToken;
 
 // src/Models/UserODM.ts
-var import_mongoose2 = require("mongoose");
+var import_mongoose = require("mongoose");
 var UserODM = class {
   constructor() {
-    this.schema = new import_mongoose2.Schema({
+    this.schema = new import_mongoose.Schema({
       email: { type: String, required: true },
       password: { type: String, required: true }
     });
-    this.model = import_mongoose2.models.User || (0, import_mongoose2.model)("User", this.schema);
+    this.model = import_mongoose.models.User || (0, import_mongoose.model)("User", this.schema);
   }
   createUser(email, hashPass) {
     return __async(this, null, function* () {
@@ -193,140 +185,5 @@ var LoginController = class {
   }
 };
 var LoginController_default = LoginController;
-
-// src/Routes/LoginRouter.ts
-var LoginRouter = class {
-  constructor() {
-    this.router = (0, import_express.Router)();
-    this.setupRouter();
-  }
-  setupRouter() {
-    return __async(this, null, function* () {
-      this.router.post("/", (req, res, next) => new LoginController_default(req, res, next).login());
-    });
-  }
-};
-var LoginRouter_default = LoginRouter;
-
-// src/Middlewares/ErrorHandler.ts
-var ErrorHandler = class {
-  static handle(error, _req, res, next) {
-    res.status(error.status || StatusCodes_default.INTERNAL_SERVER_ERROR_STATUS).json({ message: error.message });
-    next();
-  }
-};
-var ErrorHandler_default = ErrorHandler;
-
-// src/Routes/RegisterRouter.ts
-var import_express2 = require("express");
-
-// src/Services/RegisterService.ts
-var import_bcryptjs2 = __toESM(require("bcryptjs"));
-var RegisterService = class {
-  constructor() {
-    this.model = new UserODM_default();
-  }
-  handleRegister(user) {
-    return __async(this, null, function* () {
-      const { email, password } = user;
-      yield this.verifyIfUserExistsByEmail(email);
-      const hashPass = yield this.encryptThePassword(password);
-      yield this.saveInDatabase(email, hashPass);
-      return JWT_default(email);
-    });
-  }
-  verifyIfUserExistsByEmail(email) {
-    return __async(this, null, function* () {
-      const user = yield this.model.readUserByEmail(email);
-      if (user) {
-        const error = new Error("J\xE1 existe um usu\xE1rio com este email");
-        error.status = StatusCodes_default.CONFLICT;
-        throw error;
-      }
-      return user;
-    });
-  }
-  encryptThePassword(password) {
-    return __async(this, null, function* () {
-      const salt = yield import_bcryptjs2.default.genSalt(10);
-      const hashPass = yield import_bcryptjs2.default.hash(password, salt);
-      return hashPass;
-    });
-  }
-  saveInDatabase(email, hashPass) {
-    return __async(this, null, function* () {
-      yield this.model.createUser(email, hashPass);
-    });
-  }
-};
-var RegisterService_default = RegisterService;
-
-// src/Controllers/RegisterController.ts
-var RegisterController = class {
-  constructor(req, res, next) {
-    this.req = req;
-    this.res = res;
-    this.next = next;
-    this.service = new RegisterService_default();
-  }
-  register() {
-    return __async(this, null, function* () {
-      try {
-        const { user } = this.req.body;
-        UserValidation_default.validate(user);
-        const token = yield this.service.handleRegister(user);
-        return this.res.status(StatusCodes_default.OK_STATUS).json({ token });
-      } catch (e) {
-        this.next(e);
-      }
-    });
-  }
-};
-var RegisterController_default = RegisterController;
-
-// src/Routes/RegisterRouter.ts
-var RegisterRouter = class {
-  constructor() {
-    this.router = (0, import_express2.Router)();
-    this.setupRouter();
-  }
-  setupRouter() {
-    this.router.post("/", (req, res, next) => new RegisterController_default(req, res, next).register());
-  }
-};
-var RegisterRouter_default = RegisterRouter;
-
-// src/App.ts
-dotenv2.config();
-var App = class {
-  constructor() {
-    this.app = (0, import_express3.default)();
-    this.config();
-  }
-  config() {
-    this.app.use((0, import_cors.default)());
-    this.app.use(import_express3.default.json());
-    this.app.use("/login", new LoginRouter_default().router);
-    this.app.use("/register", new RegisterRouter_default().router);
-    this.app.use(ErrorHandler_default.handle);
-  }
-  start() {
-    connection_default(process.env.MONGO_DB_URI || "").then(
-      () => {
-        this.app.listen(process.env.PORT, () => {
-          console.log(`Running at Port ${process.env.PORT}`);
-        });
-      }
-    ).catch((error) => {
-      console.log("Connection with database generated an error:\r\n");
-      console.error(error);
-      console.log("\r\nServer initialization cancelled");
-      process.exit(0);
-    });
-  }
-};
-var App_default = App;
-
-// src/server.ts
-var app = new App_default();
-app.start();
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {});

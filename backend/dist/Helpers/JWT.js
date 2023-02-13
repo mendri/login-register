@@ -22,40 +22,39 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var __async = (__this, __arguments, generator) => {
-  return new Promise((resolve, reject) => {
-    var fulfilled = (value) => {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    };
-    var rejected = (value) => {
-      try {
-        step(generator.throw(value));
-      } catch (e) {
-        reject(e);
-      }
-    };
-    var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
-    step((generator = generator.apply(__this, __arguments)).next());
-  });
-};
 
-// src/Models/connection.ts
-var connection_exports = {};
-__export(connection_exports, {
-  default: () => connection_default
+// src/Helpers/JWT.ts
+var JWT_exports = {};
+__export(JWT_exports, {
+  default: () => JWT_default
 });
-module.exports = __toCommonJS(connection_exports);
-var import_mongoose = __toESM(require("mongoose"));
-function connectToDatabase(URI) {
-  return __async(this, null, function* () {
-    import_mongoose.default.set("strictQuery", true);
-    yield import_mongoose.default.connect(URI);
-  });
-}
-var connection_default = connectToDatabase;
+module.exports = __toCommonJS(JWT_exports);
+var dotenv = __toESM(require("dotenv"));
+var jwt = __toESM(require("jsonwebtoken"));
+
+// src/Helpers/StatusCodes.ts
+var StatusCodes = {
+  "OK_STATUS": 200,
+  "BAD_REQUEST_STATUS": 400,
+  "UNAUTHORIZED_STATUS": 401,
+  "NOT_FOUND": 404,
+  "CONFLICT": 409,
+  "INTERNAL_SERVER_ERROR_STATUS": 500
+};
+var StatusCodes_default = StatusCodes;
+
+// src/Helpers/JWT.ts
+dotenv.config();
+var TOKEN_SECRET = process.env.JWT_SECRET;
+var generateToken = (payload) => {
+  if (typeof TOKEN_SECRET != "string") {
+    const error = new Error("Problemas internos");
+    error.status = StatusCodes_default.INTERNAL_SERVER_ERROR_STATUS;
+    throw error;
+  }
+  const token = jwt.sign(payload, TOKEN_SECRET);
+  return token;
+};
+var JWT_default = generateToken;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {});

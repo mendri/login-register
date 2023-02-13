@@ -5,6 +5,10 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
@@ -17,6 +21,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -39,6 +44,11 @@ var __async = (__this, __arguments, generator) => {
 };
 
 // src/App.ts
+var App_exports = {};
+__export(App_exports, {
+  default: () => App_default
+});
+module.exports = __toCommonJS(App_exports);
 var dotenv2 = __toESM(require("dotenv"));
 var import_express3 = __toESM(require("express"));
 
@@ -326,7 +336,5 @@ var App = class {
   }
 };
 var App_default = App;
-
-// src/server.ts
-var app = new App_default();
-app.start();
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {});
