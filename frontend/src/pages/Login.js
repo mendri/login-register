@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HTTP_REQUEST from "../axios/config";
 import { useNavigate } from "react-router-dom";
-import "../css/Login.css";
+import "../css/Login-And-Register.css";
 
 
 
@@ -13,13 +13,17 @@ function Login() {
     const IS_THE_FORM_CORRECTLY_TYPED = EMAIL_REGEX.test(email) && password.length >= 8;
     const NAVIGATE = useNavigate();
 
+    useEffect(() => {
+        localStorage.removeItem("user");
+    }, []);
+
     async function handleLoginBtn() {
         try {
             const { data } = await HTTP_REQUEST.post("/login", { user: {
                 email,
                 password
             }});
-            localStorage.setItem("token", JSON.stringify(data.token));
+            localStorage.setItem("user", JSON.stringify({ token: data.token, email: data.email }));
             return NAVIGATE("/home");
         } catch(e) {
             return setErrMessage(e.response.data.message);

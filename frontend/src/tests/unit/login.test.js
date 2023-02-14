@@ -5,8 +5,8 @@ import App from "../../App";
 import renderWithRouter from "./renderWithRouter";
 import HTTP_REQUEST from "../../axios/config";
 
-describe("Testa a página de", () => {
-    it("Conferi se todos os elementos são renderizados na tela", async () => {
+describe("Testa a página de login", () => {
+    it("Confere se todos os elementos são renderizados na tela de login", async () => {
         renderWithRouter(<App />, "/login");
         
         const LOGIN_EMAIL_INPUT = screen.getByTestId("login-email-input");
@@ -21,7 +21,7 @@ describe("Testa a página de", () => {
         expect(REGISTER_INPUT).toBeInTheDocument();
     });
 
-    it("Conferi se ao fazer um login correto a aplicação redireciona corretamente", async () => {
+    it("Confere se ao fazer um login correto a aplicação redireciona corretamente", async () => {
         const { history } = renderWithRouter(<App />, "/login");
 
         const LOGIN_EMAIL_INPUT = screen.getByTestId("login-email-input");
@@ -33,12 +33,15 @@ describe("Testa a página de", () => {
 
         expect(LOGIN_INPUT).not.toBeDisabled();
 
+        jest.spyOn(HTTP_REQUEST, "post").mockResolvedValueOnce({ data: { token: "opdsganrh4156465" }});
+        
         userEvent.click(LOGIN_INPUT);
-
-        jest.spyOn(HTTP_REQUEST, "post").mockResolvedValueOnce({ token: "1234" });
 
         await waitFor(() => {
             expect(history.pathname).toBe("/home");
         });
+
+        const LOGGED_MESSAGE = screen.getByTestId("logged-message");
+        expect(LOGGED_MESSAGE).toBeInTheDocument();
     });
 });

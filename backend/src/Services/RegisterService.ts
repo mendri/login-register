@@ -12,12 +12,13 @@ class RegisterService {
         this.model = new UserODM();
     }
 
-    public async handleRegister(user: IUser): Promise<string> {
+    public async handleRegister(user: IUser) {
         const { email, password } = user;
         await this.verifyIfUserExistsByEmail(email);
         const hashPass = await this.encryptThePassword(password);
         await this.saveInDatabase(email, hashPass);
-        return generateToken(email);
+        const token = generateToken(email);
+        return { token, email };
     }
 
     private async verifyIfUserExistsByEmail(email: string) {

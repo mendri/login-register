@@ -12,13 +12,14 @@ class LoginService {
         this.model = new UserODM();
     }
     
-    public async handleLoginService(reqUser: IUser): Promise<string> {
+    public async handleLoginService(reqUser: IUser) {
         const { email, password } = reqUser;
             
         const user = await this.verifyIfUserExistsByEmail(email);
         await this.verifyEncryptedPass(password, user.password);
             
-        return generateToken(email);
+        const token = generateToken(email);
+        return { token, email };
     }
 
     private async verifyIfUserExistsByEmail(email: string) {
