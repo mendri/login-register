@@ -9,7 +9,7 @@ Front-end:
 > Desenvolvido usando: React, Tailwind Css, HTML5, Jest, Axios
 
 Back-end:
-> Desenvolvido usando: NodeJS, ExpressJS, MongoDB, TypeScript
+> Desenvolvido usando: NodeJS, ExpressJS, MongoDB, TypeScript, Bcrypt
 
 
 ## Instalando Dependências
