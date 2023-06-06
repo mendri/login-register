@@ -16,12 +16,12 @@ Back-end:
 
 > Backend
 ```bash
-cd api/ 
+cd backend/ 
 npm install
 ``` 
 > Frontend
 ```bash
-cd src/
+cd frontend/
 npm install
 ``` 
 ## Executando aplicação
@@ -29,12 +29,12 @@ npm install
 * Para rodar o back-end:
 
   ```
-  cd api/ && npm start
+  cd backend/ && npm start
   ```
 * Para rodar o front-end:
 
   ```
-    cd src/ && npm start
+  cd frontend/ && npm start
   ```
 
 ## Executando Testes
@@ -44,3 +44,7 @@ npm install
   ```
     npm test
   ```
+  
+## Vendo na Prática
+
+  * https://login-register-mendri.vercel.app/login
