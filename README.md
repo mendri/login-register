@@ -24,7 +24,7 @@ npm install
 cd frontend/
 npm install
 ``` 
-## Executando aplicação
+## Executando aplicação (Lembrando que é necessário algumas modificações e a criação de um .env por motivos de segurança)
 
 * Para rodar o back-end:
 
